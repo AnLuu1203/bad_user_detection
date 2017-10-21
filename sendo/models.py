@@ -26,3 +26,10 @@ class SalesOrderDetail(models.Model):
     quantity = models.IntegerField(default=0)
     subtotal = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     sales_order_id = models.ForeignKey(SalesOrder, on_delete=models.CASCADE)
+
+class Shipment(models.Model):
+    shipment_date = models.DateTimeField(null=True)
+    delivery_status = models.CharField(max_length=256, default='')
+    delivery_status_date = models.DateTimeField(null=True)
+    created_date = models.DateTimeField(null=True)
+    sales_order_id = models.ForeignKey(SalesOrder, on_delete=models.CASCADE)
