@@ -33,3 +33,17 @@ class Shipment(models.Model):
     delivery_status_date = models.DateTimeField(null=True)
     created_date = models.DateTimeField(null=True)
     sales_order_id = models.ForeignKey(SalesOrder, on_delete=models.CASCADE)
+
+class BlacklistPhone(models.Model):
+    created_date = models.DateTimeField(null=True)
+    updated_date = models.DateTimeField(null=True)
+    phone_number_encode = models.CharField(max_length=256, default='')
+    created_user_encode = models.CharField(max_length=256, default='')
+    updated_user_encode = models.CharField(max_length=256, default='')
+
+class BlacklistHistory(models.Model):
+    created_date = models.DateTimeField(null=True)
+    note = models.TextField(default='')
+    phone_number_encode = models.CharField(max_length=256, default='')
+    store_id_encode = models.CharField(max_length=256, default='')
+    blacklist_phone_id = models.ForeignKey(BlacklistPhone, on_delete=models.CASCADE)
