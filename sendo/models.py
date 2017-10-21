@@ -19,3 +19,10 @@ class SalesOrder(models.Model):
     order_date = models.DateTimeField(null=True)
     order_expected_delivery_date = models.DateTimeField(null=True)
     store_id_encode = models.CharField(max_length=256, default='')
+
+class SalesOrderDetail(models.Model):
+    product_name = models.CharField(max_length=256, default='')
+    price = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    quantity = models.IntegerField(default=0)
+    subtotal = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    sales_order_id = models.ForeignKey(SalesOrder, on_delete=models.CASCADE)
