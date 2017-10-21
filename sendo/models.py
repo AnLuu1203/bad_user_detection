@@ -1,3 +1,21 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.db import models
 
 # Create your models here.
+class SalesOrder(models.Model):
+    buyer_region_name = models.CharField(max_length=256, default='')
+    buyer_district_name = models.CharField(max_length=256, default='')
+    total_amount = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    payment_method = models.CharField(max_length=256, default='')
+    carrier_service_name = models.CharField(max_length=256, default='')
+    order_status = models.CharField(max_length=256, default='')
+    reason_cancel = models.TextField(default='')
+    buyer_phone_encode = models.CharField(max_length=256, default='')
+    buyer_name_encode = models.CharField(max_length=256, default='')
+    email_encode = models.CharField(max_length=256, default='')
+    buyer_address_encode = models.CharField(max_length=256, default='')
+    order_date = models.DateTimeField(null=True)
+    order_expected_delivery_date = models.DateTimeField(null=True)
+    store_id_encode = models.CharField(max_length=256, default='')
