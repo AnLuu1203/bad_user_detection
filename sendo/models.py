@@ -25,14 +25,14 @@ class SalesOrderDetail(models.Model):
     price = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     quantity = models.IntegerField(default=0)
     subtotal = models.DecimalField(max_digits=15, decimal_places=2, default=0)
-    sales_order_id = models.ForeignKey(SalesOrder, on_delete=models.CASCADE)
+    sales_order = models.ForeignKey(SalesOrder, on_delete=models.CASCADE)
 
 class Shipment(models.Model):
     shipment_date = models.DateTimeField(null=True)
     delivery_status = models.CharField(max_length=256, default='')
     delivery_status_date = models.DateTimeField(null=True)
     created_date = models.DateTimeField(null=True)
-    sales_order_id = models.ForeignKey(SalesOrder, on_delete=models.CASCADE)
+    sales_order = models.ForeignKey(SalesOrder, on_delete=models.CASCADE)
 
 class BlacklistPhone(models.Model):
     created_date = models.DateTimeField(null=True)
@@ -46,4 +46,4 @@ class BlacklistHistory(models.Model):
     note = models.TextField(default='')
     phone_number_encode = models.CharField(max_length=256, default='')
     store_id_encode = models.CharField(max_length=256, default='')
-    blacklist_phone_id = models.ForeignKey(BlacklistPhone, on_delete=models.CASCADE)
+    blacklist_phone = models.ForeignKey(BlacklistPhone, on_delete=models.CASCADE)
