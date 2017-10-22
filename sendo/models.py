@@ -21,12 +21,18 @@ class SalesOrder(models.Model):
     store_id_encode = models.CharField(max_length=256, default='')
     user = models.ForeignKey('sendo.User', on_delete=models.SET_NULL, null=True)
 
+    def __str__(self):
+        return str(self.__dict__)
+
 class SalesOrderDetail(models.Model):
     product_name = models.CharField(max_length=256, default='')
     price = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     quantity = models.IntegerField(default=0)
     subtotal = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     sales_order = models.ForeignKey(SalesOrder, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.__dict__)
 
 class Shipment(models.Model):
     shipment_date = models.DateTimeField(null=True)
@@ -35,6 +41,9 @@ class Shipment(models.Model):
     created_date = models.DateTimeField(null=True)
     sales_order = models.ForeignKey(SalesOrder, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return str(self.__dict__)
+
 class BlacklistPhone(models.Model):
     created_date = models.DateTimeField(null=True)
     updated_date = models.DateTimeField(null=True)
@@ -42,12 +51,18 @@ class BlacklistPhone(models.Model):
     created_user_encode = models.CharField(max_length=256, default='')
     updated_user_encode = models.CharField(max_length=256, default='')
 
+    def __str__(self):
+        return str(self.__dict__)
+
 class BlacklistHistory(models.Model):
     created_date = models.DateTimeField(null=True)
     note = models.TextField(default='')
     phone_number_encode = models.CharField(max_length=256, default='')
     store_id_encode = models.CharField(max_length=256, default='')
     blacklist_phone = models.ForeignKey(BlacklistPhone, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.__dict__)
 
 class User(models.Model):
     phone_number_encode = models.CharField(max_length=256, default='')
@@ -65,3 +80,6 @@ class User(models.Model):
     cancel_by_other_count = models.IntegerField(default=0)
     cancel_by_system = models.IntegerField(default=0)
     continuous_order_count = models.IntegerField(default=0)
+
+    def __str__(self):
+        return str(self.__dict__)

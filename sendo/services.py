@@ -4,9 +4,7 @@ from django.utils.dateparse import parse_datetime
 
 import csv
 
-
 class SendoDataHandler(object):
-
     @staticmethod
     def import_sales_orders():
         spamreader = csv.reader(open('sendo/data/sales_orders.csv', newline=''))
@@ -109,12 +107,51 @@ class SendoDataHandler(object):
         SendoDataHandler.import_shipments()
         SendoDataHandler.import_blacklist_phones()
         SendoDataHandler.import_blacklist_histories()
+        SendoDataHandler.create_users()
 
     @staticmethod
     def delete_data():
         print('Deleting old data....')
-        [x.delete for x in SalesOrder.objects.all()]
-        [x.delete for x in SalesOrderDetail.objects.all()]
-        [x.delete for x in Shipment.objects.all()]
-        [x.delete for x in BlacklistPhone.objects.all()]
-        [x.delete for x in BlacklistHistory.objects.all()]
+        [x.delete() for x in SalesOrder.objects.all()]
+        [x.delete() for x in SalesOrderDetail.objects.all()]
+        [x.delete() for x in Shipment.objects.all()]
+        [x.delete() for x in BlacklistPhone.objects.all()]
+        [x.delete() for x in BlacklistHistory.objects.all()]
+        [x.delete() for x in User.objects.all()]
+
+    @staticmethod
+    def create_users():
+        for sales_order in SalesOrder.objects.all():
+            try:
+                user = User.objects.get(phone_number_encode=sales_order.buyer_phone_encode)
+            except:
+                user = User(phone_number_encode=sales_order.buyer_phone_encode)
+            user.save()
+            sales_order.user_id = user.id
+            sales_order.save()
+            print(user)
+
+        SendoDataHandler.update_users()
+
+    @staticmethod
+    def update_users():
+        for user in User.objects.all():
+            user.bad_user = BlacklistPhone.objects.filter(phone_number_encode=user.phone_number_encode).count() > 0
+
+            sales_orders = SalesOrder.objects.filter(user_id=user.id)
+            user.sales_order_count = sales_orders.count()
+            user.complete_order_count = sales_orders.filter(order_status='Hoàn tất').count()
+            user.cancel_order_count = sales_orders.filter(order_status='Hủy').count()
+            user.close_order_count = sales_orders.filter(order_status='Đóng').count()
+
+            cancel_sales_orders = sales_orders.filter(order_status='Hủy')
+            user.cancel_by_seller_count = cancel_sales_orders.filter(reason_cancel='Hủy bởi Seller').count()
+            user.cancel_by_buyer_count = cancel_sales_orders.filter(reason_cancel='Hủy bởi Buyer').count()
+            user.seller_deny_deliver_count = cancel_sales_orders.filter(reason_cancel='Seller từ chối giao hàng').count()
+            user.seller_request_cancel_count = cancel_sales_orders.filter(reason_cancel='Seller yêu cầu hủy').count()
+            user.split_order_count = cancel_sales_orders.filter(reason_cancel='Hủy bởi tách đơn hàng').count()
+            user.combine_order_count = cancel_sales_orders.filter(reason_cancel='Gộp đơn hàng').count()
+            user.cancel_by_other_count = cancel_sales_orders.filter(reason_cancel='Hủy lý do khác').count()
+            user.cancel_by_system = cancel_sales_orders.filter(reason_cancel='Hủy tự động bởi hệ thống').count()
+            user.save()
+            print(user)
