@@ -19,6 +19,7 @@ class SalesOrder(models.Model):
     order_date = models.DateTimeField(null=True)
     order_expected_delivery_date = models.DateTimeField(null=True)
     store_id_encode = models.CharField(max_length=256, default='')
+    user = models.ForeignKey('sendo.User', on_delete=models.SET_NULL, null=True)
 
 class SalesOrderDetail(models.Model):
     product_name = models.CharField(max_length=256, default='')
